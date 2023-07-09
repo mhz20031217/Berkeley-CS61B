@@ -84,9 +84,9 @@ public class Planet {
         return f * (p.yyPos - yyPos) / r;
     }
 	/**
-	 * 
-	 * @param lst
-	 * @return
+	 * Take in an array of Planets and calculate the net X and net Y force exerted by all planets in that array upon the current Planet.
+	 * @param lst An array of Planets, if the current planet is included, it will be excluded in the calculation.
+	 * @return the net force in the x direction.
 	 */
     public double calcNetForceExertedByX(Planet[] lst) {
         double ret = 0;
@@ -109,6 +109,12 @@ public class Planet {
         }
         return ret;
     }
+	/**
+	 * Update the velocity and position of the planet according to the given delta time, force in the x direction and force in the y direction.
+	 * @param t Delta time.
+	 * @param fx X-force.
+	 * @param fy Y-force.
+	 */
 	public void update(double t, double fx, double fy) {
 		xxVel += fx / mass * t;
 		yyVel += fy / mass * t;
