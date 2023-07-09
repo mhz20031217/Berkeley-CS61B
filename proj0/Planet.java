@@ -74,7 +74,7 @@ public class Planet {
         return f * (p.xxPos - xxPos) / r;
     }
 	/**
-	 * @see calcForceExertedByX
+	 * @see {@link Planet#calcForceExertedByX}
 	 */
     public double calcForceExertedByY(Planet p) {
         if (yyPos == p.yyPos)
@@ -98,7 +98,7 @@ public class Planet {
         return ret;
     }
 	/**
-	 * @see calcNetForceExertedByX
+	 * @see {@link Planet#calcNetForceExertedByX}
 	 */
     public double calcNetForceExertedByY(Planet[] lst) {
         double ret = 0;
