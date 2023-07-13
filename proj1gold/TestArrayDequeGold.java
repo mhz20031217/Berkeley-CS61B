@@ -7,7 +7,7 @@ public class TestArrayDequeGold {
 
     static StudentArrayDeque<Integer> sol = new StudentArrayDeque<>();
     static ArrayDequeSolution<Integer> std = new ArrayDequeSolution<>();
-    String msg;
+    String msg = "";
 
     boolean booleanDice() {
         return StdRandom.uniform() >= 0.5;
