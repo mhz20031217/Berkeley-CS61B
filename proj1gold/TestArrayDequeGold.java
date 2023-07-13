@@ -38,7 +38,7 @@ public class TestArrayDequeGold {
     }
 
     boolean testEnd() {
-        msg += "removeEnd()\n";
+        msg += "removeLast()\n";
         Integer a = sol.removeLast();
         Integer b = std.removeLast();
         assertEquals(msg, b, a);
@@ -87,5 +87,4 @@ public class TestArrayDequeGold {
             }
         }
     }
-
 }
