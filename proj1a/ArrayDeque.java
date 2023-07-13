@@ -1,12 +1,13 @@
 public class ArrayDeque<T> {
-    final private int INITIAL_SIZE = 8;
+    private final int INITIAL_SIZE = 8;
 
     private T[] array;
 
     private final int[] pow2 = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512,
-            1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288,
-            1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912,
-            1073741824};
+       1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288,
+       1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456,
+       536870912, 1073741824
+    };
 
     private int begin, end, size, level;
 
@@ -58,10 +59,16 @@ public class ArrayDeque<T> {
             } else {
                 int nend = (begin + n) % length;
                 if (begin + size > array.length && begin + n < array.length) {
-                    for (int i = begin + n; i < array.length; ++i) array[i] = null;
-                    for (int i = 0; i < end; ++i) array[i] = null;
+                    for (int i = begin + n; i < array.length; ++i) {
+                        array[i] = null;
+                    }
+                    for (int i = 0; i < end; ++i) {
+                        array[i] = null;
+                    }
                 } else {
-                    for (int i = begin + n; i < end; ++i) array[i] = null;
+                    for (int i = begin + n; i < end; ++i) {
+                        array[i] = null;
+                    }
                 }
                 end = nend;
             }
@@ -88,7 +95,7 @@ public class ArrayDeque<T> {
         return size == 0;
     }
 
-    public void push_back(T item) {
+    public void pushBack(T item) {
         if (size == array.length) {
             reallocate(array.length + 1);
         }
@@ -97,7 +104,7 @@ public class ArrayDeque<T> {
         ++size;
     }
 
-    public void push_front(T item) {
+    public void pushFront(T item) {
         if (size == array.length) {
             reallocate(size + 1);
         }
@@ -106,8 +113,10 @@ public class ArrayDeque<T> {
         ++size;
     }
 
-    public T pop_back() {
-        if (size == 0) return null;
+    public T popBack() {
+        if (size == 0) {
+            return null;
+        }
         if (size > INITIAL_SIZE && array.length > 3 * size) {
             reallocate(size * 2);
         }
@@ -118,8 +127,10 @@ public class ArrayDeque<T> {
         return ret;
     }
 
-    public T pop_front() {
-        if (size == 0) return null;
+    public T popFront() {
+        if (size == 0) {
+            return null;
+        }
         if (size > INITIAL_SIZE && array.length > 3 * size) {
             reallocate(size * 2);
         }
@@ -135,19 +146,19 @@ public class ArrayDeque<T> {
     }
 
     public void addFirst(T item) {
-        push_front(item);
+        pushFront(item);
     }
 
     public void addLast(T item) {
-        push_back(item);
+        pushBack(item);
     }
 
     public T removeLast() {
-        return pop_back();
+        return popBack();
     }
 
     public T removeFirst() {
-        return pop_front();
+        return popFront();
     }
 
     public void printDeque() {
