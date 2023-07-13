@@ -49,6 +49,7 @@ public class TestArrayDequeGold {
     public void test() {
         sol = new StudentArrayDeque<>();
         std = new ArrayDequeSolution<>();
+        msg = "";
 
         int size = 0;
 
