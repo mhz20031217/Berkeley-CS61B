@@ -5,25 +5,26 @@ import org.junit.Test;
 
 public class TestArrayDequeGold {
 
-    static StudentArrayDeque<Integer> sol = new StudentArrayDeque<>();
-    static ArrayDequeSolution<Integer> std = new ArrayDequeSolution<>();
+    StudentArrayDeque<Integer> sol;
+    ArrayDequeSolution<Integer> std;
     String msg = "";
 
     boolean booleanDice() {
         return StdRandom.uniform() >= 0.5;
     }
+
     int intDice() {
-        return StdRandom.uniform(-200000000,200000000);
+        return StdRandom.uniform(0, 100000);
     }
 
     void addBegin(Integer item) {
-        msg += "addFirst("+item+")\n";
+        msg += "addFirst(" + item + ")\n";
         sol.addFirst(item);
         std.addFirst(item);
     }
 
     void addEnd(Integer item) {
-        msg += "addLast("+item+")\n";
+        msg += "addLast(" + item + ")\n";
         sol.addLast(item);
         std.addLast(item);
     }
@@ -33,7 +34,7 @@ public class TestArrayDequeGold {
         Integer a = sol.removeFirst();
         Integer b = std.removeFirst();
         assertEquals(msg, b, a);
-        return a != null && a.equals(b);
+        return a.equals(b);
     }
 
     boolean testEnd() {
@@ -41,11 +42,14 @@ public class TestArrayDequeGold {
         Integer a = sol.removeLast();
         Integer b = std.removeLast();
         assertEquals(msg, b, a);
-        return a != null && a.equals(b);
+        return a.equals(b);
     }
 
     @Test
     public void test() {
+        sol = new StudentArrayDeque<>();
+        std = new ArrayDequeSolution<>();
+
         int size = 0;
 
         while (true) {
@@ -81,8 +85,6 @@ public class TestArrayDequeGold {
                 }
             }
         }
-
-        System.out.println("Success");
     }
 
 }
