@@ -29,8 +29,8 @@ public class ArrayDeque<T> {
         return array[(pos % size + begin) % array.length];
     }
 
-    public void resize(int n) {
-        while ( level < 32 && pow2[level] < n) {
+    public void reallocate(int n) {
+        while (level < 32 && pow2[level] < n) {
             ++level;
         }
         while (level > 0 && pow2[level] > 3 * n) {
@@ -78,7 +78,6 @@ public class ArrayDeque<T> {
             end = n;
             array = narray;
         }
-        size = n;
     }
 
     public int size() {
@@ -91,7 +90,7 @@ public class ArrayDeque<T> {
 
     public void push_back(T item) {
         if (size == array.length) {
-            resize(size + 1);
+            reallocate(array.length + 1);
         }
         array[end] = item;
         end = (end + 1) % array.length;
@@ -100,7 +99,7 @@ public class ArrayDeque<T> {
 
     public void push_front(T item) {
         if (size == array.length) {
-            resize(size + 1);
+            reallocate(size + 1);
         }
         begin = Math.floorMod(begin - 1, array.length);
         array[begin] = item;
@@ -110,7 +109,7 @@ public class ArrayDeque<T> {
     public T pop_back() {
         if (size == 0) return null;
         if (size > INITIAL_SIZE && array.length > 3 * size) {
-            resize(size - 1);
+            reallocate(size * 2);
         }
         end = Math.floorMod(end - 1, array.length);
         T ret = array[end];
@@ -122,7 +121,7 @@ public class ArrayDeque<T> {
     public T pop_front() {
         if (size == 0) return null;
         if (size > INITIAL_SIZE && array.length > 3 * size) {
-            resize(size - 1);
+            reallocate(size * 2);
         }
         T ret = array[begin];
         array[begin] = null;
