@@ -2,6 +2,7 @@ package byog.Map;
 import byog.Block.Block;
 import byog.Block.BlockSet;
 import byog.Base.*;
+import byog.Creature.Player;
 import byog.TileEngine.Tileset;
 
 import java.util.*;
@@ -23,6 +24,7 @@ public class MapGenV1 extends MapGen {
     private static final int BUILDING_AREA_SINGLE_THRESHOLD = 40;
     private static final int BUILDING_COUNT_THRESHOLD = 200;
     private static final int PRECISION = 4;
+    private static final int PLAYER_HEALTH = 5;
 
     private static final Block[] NATURAL = BlockSet.NATURAL;
     private static final Block[] ARTIFACTS = BlockSet.ARTIFACTS;
@@ -444,6 +446,28 @@ public class MapGenV1 extends MapGen {
         return set;
     }
 
+    private int generatePlayers(Player[] players, Block[][] world, int width, int height, int number_of_players) {
+        TreeSet<Position> set = new TreeSet<>();
+
+        for (int k = 0; k < number_of_players; ++k) {
+            if (players[k] == null) players[k] = new Player(PLAYER_HEALTH);
+        }
+
+        int cnt = 0;
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j <height; ++j) {
+                if (world[i][j].isBlocking()) continue;
+                players[cnt].setPosition(new Position(i, j));
+                cnt++;
+                if (cnt == number_of_players) break;
+            }
+            if (cnt == number_of_players) break;
+        }
+        if (cnt != number_of_players) return 1;
+
+        return 0;
+    }
+
     /**
      * Generate an initial world.
      *
@@ -457,6 +481,8 @@ public class MapGenV1 extends MapGen {
         set.addAll(generateTerrain(map.world, random, map.WIDTH, map.HEIGHT));
         set.addAll(generateArtifacts(map.world, random, map.WIDTH, map.HEIGHT));
         set.addAll(generatePlants(map.world, random, map.WIDTH, map.HEIGHT));
+
+        generatePlayers(map.players, map.world, map.WIDTH, map.HEIGHT, map.players.length);
 
         return set;
     }

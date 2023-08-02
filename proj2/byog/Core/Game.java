@@ -1,19 +1,112 @@
 package byog.Core;
 
+import byog.Map.Map;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
+
+import java.awt.*;
 
 public class Game {
-    TERenderer ter = new TERenderer();
+    TERenderer render = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    Font smallFont = new Font("serif", Font.PLAIN, 12);
+    Font mediumFont = new Font("sans", Font.PLAIN, 24);
+    Font largeFont = new Font("sans", Font.BOLD, 36);
+
+    static {
+        StdDraw.enableDoubleBuffering();
+        StdDraw.clear();
+        StdDraw.show();
+    }
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
      */
     public void playWithKeyboard() {
+        Map map = null;
+
+        int SEED;
+
+        guiDrawFrame("");
+        guiWaitKey();
+        char ch = StdDraw.nextKeyTyped();
+        if (ch == 'q' || ch == 'Q') {
+            return;
+        } else if (ch == 'l' || ch == 'L') {
+            return;
+        } else if (ch == 'n' || ch == 'N') {
+            while (true) {
+                try {
+                    SEED = guiGetSeed();
+                    break;
+                } catch (IllegalArgumentException e) {
+                    guiDrawFrame("");
+                }
+            }
+            map = new Map(0, WIDTH, HEIGHT, SEED, 1, render);
+        }
+
+        while (true) {
+            map.render();
+            guiWaitKey();
+            ch = StdDraw.nextKeyTyped();
+
+            if (ch != ':') {
+                map.control(ch);
+            } else {
+                guiWaitKey();
+                ch = StdDraw.nextKeyTyped();
+                if (ch == 'q' || ch == 'Q') {
+                    break;
+                }
+            }
+        }
     }
+
+    private void guiWaitKey() {
+        while (!StdDraw.hasNextKeyTyped()) {
+            StdDraw.pause(10);
+        }
+    }
+
+    private int guiGetSeed() {
+        String input = "";
+        guiDrawFrame(input);
+
+        while (true) {
+            if (!StdDraw.hasNextKeyTyped()) {
+                StdDraw.pause(100);
+                continue;
+            }
+            char key = StdDraw.nextKeyTyped();
+            if (key == 'S') {
+                break;
+            } else if (Character.isAlphabetic(key)) {
+                throw new IllegalArgumentException();
+            }
+            input += String.valueOf(key);
+            guiDrawFrame(input);
+        }
+        StdDraw.pause(500);
+        return Integer.parseInt(input);
+    }
+
+    private void guiDrawFrame(String s) {
+        StdDraw.clear();
+        StdDraw.setFont(largeFont);
+        StdDraw.text(0.5, 0.7, "CS61B: THE GAME");
+        StdDraw.setFont(mediumFont);
+        StdDraw.text(0.5, 0.5, "New Game (N)");
+        StdDraw.text(0.5, 0.4, "Load Game (L)");
+        StdDraw.text(0.5, 0.3, "Quit (Q)");
+
+        StdDraw.text(0.5, 0.2, s);
+        StdDraw.show();
+    }
+
 
     /**
      * Method used for autograding and testing the game code. The input string will be a series
@@ -24,6 +117,7 @@ public class Game {
      * world. However, the behavior is slightly different. After playing with "n123sss:q", the game
      * should save, and thus if we then called playWithInputString with the string "l", we'd expect
      * to get the exact same world back again, since this corresponds to loading the saved game.
+     *
      * @param input the input string to feed to your program
      * @return the 2D TETile[][] representing the state of the world
      */

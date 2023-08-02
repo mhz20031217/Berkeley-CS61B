@@ -41,9 +41,12 @@ public class BlockSet {
     public static final Set<Block> S_TERRAIN = new HashSet<>();
     public static final Set<Block> S_PLANTS = new HashSet<>();
 
+    static {
+        init();
+    }
     /**
      * Initialize the Tileset
-     * This function must be called before Map generation
+     * This function is automatically called before Map generation
      * @return
      */
     public static int init() {

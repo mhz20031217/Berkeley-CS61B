@@ -2,13 +2,16 @@ package byog.Creature;
 
 import byog.Base.Position;
 import byog.Block.Block;
+import byog.TileEngine.TETile;
 
 public abstract class Creature {
     private Position position;
     private int health;
     private boolean alive;
+    protected TETile tile;
 
-    Creature(int health) {
+    Creature(int health, TETile tile) {
+        this.tile = tile;
         assert (health > 0);
         alive = true;
         this.health = health;
@@ -32,5 +35,18 @@ public abstract class Creature {
 
     public int blockEffect(Block block) {
         return health;
+    }
+
+    public int setPosition(Position pos) {
+        this.position = pos;
+        return 0;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public TETile getTile() {
+        return tile;
     }
 }
