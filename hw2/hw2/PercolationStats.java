@@ -3,46 +3,38 @@ package hw2;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
-import java.util.*;
-
 public class PercolationStats {
-    private final Percolation[] array;
     private final double[] res;
-    int N;
+    private final int T;
 
     private int getX(int index) {
-        return index / N;
+        return index / T;
     }
 
     private int getY(int index) {
-        return index % N;
+        return index % T;
     }
 
-    private void carryOutExperiment(int i) {
-        Percolation box = array[i];
-        Integer[] order = new Integer[N * N];
-        for (int j = 0; j < N * N; j++) {
-            order[j] = j;
-        }
-        StdRandom.shuffle(order);
-        int count = 0;
-        while (!box.percolates()) {
-            box.open(getX(order[count]), getY(order[count]));
-            ++count;
-        }
-        res[i] = (double) count / (N * N);
-    }
 
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException();
         }
-        this.N = N;
-        array = new Percolation[N];
+        this.T = T;
         res = new double[N];
-        for (int i = 0; i < N; i++) {
-            array[i] = pf.make(N);
-            carryOutExperiment(i);
+        for (int i = 0; i < T; i++) {
+            Percolation box = pf.make(N);
+            Integer[] order = new Integer[N * N];
+            for (int j = 0; j < N * N; j++) {
+                order[j] = j;
+            }
+            StdRandom.shuffle(order);
+            int count = 0;
+            while (!box.percolates()) {
+                box.open(getX(order[count]), getY(order[count]));
+                ++count;
+            }
+            res[i] = (double) count / (N * N);
         }
     }
 
@@ -55,11 +47,10 @@ public class PercolationStats {
     }
 
     public double confidenceLow() {
-        return mean() - 1.96 * stddev() / Math.sqrt(N);
+        return mean() - 1.96 * stddev() / Math.sqrt(T);
     }
 
     public double confidenceHigh() {
-        return mean() + 1.96 * stddev() / Math.sqrt(N);
+        return mean() + 1.96 * stddev() / Math.sqrt(T);
     }
-
 }
