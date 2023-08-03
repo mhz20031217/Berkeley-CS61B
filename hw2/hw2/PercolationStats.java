@@ -5,14 +5,14 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
     private final double[] res;
-    private final int T;
+    private final int T, N;
 
     private int getX(int index) {
-        return index / T;
+        return index / N;
     }
 
     private int getY(int index) {
-        return index % T;
+        return index % N;
     }
 
 
@@ -21,7 +21,8 @@ public class PercolationStats {
             throw new IllegalArgumentException();
         }
         this.T = T;
-        res = new double[N];
+        this.N = N;
+        res = new double[T];
         for (int i = 0; i < T; i++) {
             Percolation box = pf.make(N);
             Integer[] order = new Integer[N * N];
@@ -52,5 +53,10 @@ public class PercolationStats {
 
     public double confidenceHigh() {
         return mean() + 1.96 * stddev() / Math.sqrt(T);
+    }
+
+    public static void main(String[] args) {
+        PercolationStats ps = new PercolationStats(10, 10, new PercolationFactory());
+        System.out.println(ps.mean());
     }
 }
