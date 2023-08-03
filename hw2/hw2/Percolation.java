@@ -5,11 +5,11 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     private static final int[] DX = {0, 0, 1, -1},
             DY = {1, -1, 0, 0};
-    private final WeightedQuickUnionUF ds;
+    private final WeightedQuickUnionUF ds, dsS, dsE;
     private final boolean[][] map;
     private final int scale;
     private int count;
-    private final int st;
+    private final int st, ed;
     private boolean percolates;
 
     private int index(int x, int y) {
@@ -27,8 +27,11 @@ public class Percolation {
         }
         scale = N;
         map = new boolean[N][N];
-        ds = new WeightedQuickUnionUF(N * N + 1);
+        ds = new WeightedQuickUnionUF(N * N + 2);
+        dsS = new WeightedQuickUnionUF(N * N + 2);
+        dsE = new WeightedQuickUnionUF(N * N + 2);
         st = N * N;
+        ed = st + 1;
     }
 
     public void open(int row, int col) {
@@ -40,18 +43,24 @@ public class Percolation {
         }
         ++count;
         map[row][col] = true;
+        int p = index(row, col);
         for (int k = 0; k < 4; ++k) {
             int nx = row + DX[k], ny = col + DY[k];
             if (!inRange(nx, ny) || !isOpen(nx, ny)) {
                 continue;
             }
-            ds.union(index(row, col), index(nx, ny));
+            int np = index(nx, ny);
+            ds.union(p, np);
+            dsS.union(p, np);
+            dsE.union(p, np);
         }
         if (row == 0) {
-            ds.union(index(row, col), st);
+            ds.union(p, st);
+            dsS.union(p, st);
         }
         if (row == scale - 1) {
-            percolates = true;
+            ds.union(p, ed);
+            dsE.union(p, ed);
         }
     }
 
@@ -66,7 +75,8 @@ public class Percolation {
         if (!inRange(row, col)) {
             throw new IndexOutOfBoundsException();
         }
-        return ds.connected(st, index(row, col));
+        int p = index(row, col);
+        return dsS.connected(p, st);
     }
 
     public int numberOfOpenSites() {
@@ -74,7 +84,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return percolates;
+        return ds.connected(st, ed);
     }
 
     public static void main(String[] args) {
