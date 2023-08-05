@@ -1,13 +1,15 @@
 package lab9;
 
+import java.security.Key;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *  A hash table-backed Map implementation. Provides amortized constant time
  *  access to elements via get(), remove(), and put() in the best case.
  *
- *  @author Your name here
+ *  @author Caterpillar
  */
 public class MyHashMap<K, V> implements Map61B<K, V> {
 
@@ -23,6 +25,11 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     public MyHashMap() {
         buckets = new ArrayMap[DEFAULT_SIZE];
+        this.clear();
+    }
+
+    public MyHashMap(int initialSize) {
+        buckets = new ArrayMap[initialSize];
         this.clear();
     }
 
@@ -53,19 +60,34 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        return buckets[hash(key)].get(key);
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        int index = hash(key);
+        if (!buckets[index].containsKey(key)) ++size;
+        buckets[index].put(key, value);
+        if (loadFactor() > MAX_LF) {
+            resize(2 * buckets.length);
+        }
+    }
+
+    private void resize(int size) {
+        MyHashMap<K, V> temp = new MyHashMap<>(size);
+        for (int i = 0; i < buckets.length; ++i) {
+            for (K key : buckets[i]) {
+                temp.put(key, buckets[i].get(key));
+            }
+        }
+        this.buckets = temp.buckets;
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
@@ -73,7 +95,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        TreeSet<K> ret = new TreeSet<>();
+        for (int i = 0; i < buckets.length; ++i) {
+            for (K key: buckets[i]) {
+                ret.add(key);
+            }
+        }
+        return ret;
     }
 
     /* Removes the mapping for the specified key from this map if exists.
@@ -81,7 +109,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * UnsupportedOperationException. */
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V ret = buckets[hash(key)].remove(key);
+        if (ret != null) --size;
+        return ret;
     }
 
     /* Removes the entry for the specified key only if it is currently mapped to
@@ -89,11 +119,43 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * throw an UnsupportedOperationException.*/
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        V ret = buckets[hash(key)].remove(key, value);
+        if (ret != null) --size;
+        return ret;
     }
 
     @Override
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return new MyHashMapIterator();
+    }
+
+    private class MyHashMapIterator implements Iterator<K> {
+        private int pos;
+        private Iterator<K> it;
+
+        public MyHashMapIterator() {
+            pos = 0;
+            it = buckets[0].iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (pos == buckets.length) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public K next() {
+            K ret = it.next();
+            if (!it.hasNext()) {
+                pos++;
+                if (pos < buckets.length) {
+                    it = buckets[pos].iterator();
+                }
+            }
+            return ret;
+        }
     }
 }
