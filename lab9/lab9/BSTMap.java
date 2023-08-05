@@ -203,6 +203,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V>, Iterabl
     public V remove(K key) {
         removeRegister = null;
         root = removeHelper(key, root);
+        if (removeRegister == null) return null;
         return removeRegister.value;
     }
 
@@ -215,6 +216,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V>, Iterabl
     public V remove(K key, V value) {
         removeRegister = null;
         root = removeHelper(key, value, root);
+        if (removeRegister == null) return null;
         return removeRegister.value;
     }
 
