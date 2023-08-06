@@ -8,7 +8,7 @@ public class QuickSort {
      */
     private static <Item extends Comparable> Queue<Item> catenate(Queue<Item> q1, Queue<Item> q2) {
         Queue<Item> catenated = new Queue<Item>();
-        for (Item item : q1) {
+        for (Item item: q1) {
             catenated.enqueue(item);
         }
         for (Item item: q2) {
@@ -37,23 +37,39 @@ public class QuickSort {
      *
      * @param unsorted  A Queue of unsorted items
      * @param pivot     The item to pivot on
-     * @param less      An empty Queue. When the function completes, this queue will contain
+     * @param lt      An empty Queue. When the function completes, this queue will contain
      *                  all of the items in unsorted that are less than the given pivot.
-     * @param equal     An empty Queue. When the function completes, this queue will contain
-     *                  all of the items in unsorted that are equal to the given pivot.
-     * @param greater   An empty Queue. When the function completes, this queue will contain
+     * @param ge   An empty Queue. When the function completes, this queue will contain
      *                  all of the items in unsorted that are greater than the given pivot.
      */
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
-            Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-        // Your code here!
+            Queue<Item> lt, Queue<Item> ge) {
+        while (!unsorted.isEmpty()) {
+            Item item = unsorted.dequeue();
+            int cmp = item.compareTo(pivot);
+            if (cmp < 0) {
+                lt.enqueue(item);
+            } else {
+                ge.enqueue(item);
+            }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        // Your code here!
+        if (items.size() <= 1) {
+            return items;
+        }
+        Item pivot = getRandomItem(items);
+        Queue<Item> lt, ge;
+        lt = new Queue<>();
+        ge = new Queue<>();
+        partition(items, pivot, lt, ge);
+        lt = quickSort(lt);
+        ge = quickSort(ge);
+        items = catenate(lt, ge);
         return items;
     }
 }
