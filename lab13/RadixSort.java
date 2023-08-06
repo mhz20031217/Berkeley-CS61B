@@ -37,26 +37,21 @@ public class RadixSort {
      * @param index The position to sort the Strings on.
      */
     private static void sortHelperLSD(String[] asciis, int index) {
-        ArrayList<String>[] buckets = new ArrayList[27];
-        for (int i = 0; i < 27; i++) {
+        ArrayList<String>[] buckets = new ArrayList[256];
+        for (int i = 0; i < 256; i++) {
             buckets[i] = new ArrayList<String>();
         }
         for (String ascii : asciis) {
-            if (ascii.length() <= index) {
-                buckets[0].add(ascii);
-                continue;
-            }
-            buckets[ascii.charAt(index) - 'a' + 1].add(ascii);
+            buckets[ascii.charAt(index)].add(ascii);
         }
         int count = 0;
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < 256; i++) {
             for (String s: buckets[i]) {
                 asciis[count] = s;
                 count++;
             }
         }
         assert (count == asciis.length);
-        return;
     }
 
     /**
