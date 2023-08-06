@@ -1,10 +1,15 @@
+import javax.management.relation.InvalidRelationTypeException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
  * @author Akhil Batra, Alexander Hwang
- *
  **/
-public class CountingSort {
+public class
+CountingSort {
     /**
      * Counting sort on the given int array. Returns a sorted version of the array.
      * Does not touch original array (non-destructive method).
@@ -66,7 +71,32 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int[] v = arr, ret = new int[v.length];
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int N = v.length;
+        for (int i = 0; i < N; i++) {
+            max = Math.max(max, v[i]);
+            min = Math.min(min, v[i]);
+        }
+        int range = max - min + 1;
+        int[] buckets = new int[range];
+        for (int i = 0; i < N; i++) {
+            buckets[v[i] - min]++;
+        }
+
+        Map<Integer, Integer> start = new TreeMap<>();
+        int pt = 0;
+        for (int i = 0; i < range; i++) {
+            if (buckets[i] > 0) {
+                start.put(i + min, pt);
+                pt += buckets[i];
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            ret[start.get(v[i]) + (--buckets[v[i] - min])] = v[i];
+        }
+
+        return ret;
     }
 }

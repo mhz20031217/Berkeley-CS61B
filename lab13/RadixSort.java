@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Class for doing Radix sort
  *
@@ -16,8 +19,15 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+        int maxLength = 0;
+        for (String s: asciis) {
+            maxLength = Math.max(s.length(), maxLength);
+        }
+
+        for (int i = 0; i < maxLength; i++) {
+            sortHelperLSD(asciis, i);
+        }
+        return asciis;
     }
 
     /**
@@ -27,7 +37,24 @@ public class RadixSort {
      * @param index The position to sort the Strings on.
      */
     private static void sortHelperLSD(String[] asciis, int index) {
-        // Optional LSD helper method for required LSD radix sort
+        ArrayList<String>[] buckets = new ArrayList[27];
+        for (int i = 0; i < 27; i++) {
+            buckets[i] = new ArrayList<String>();
+        }
+        for (String ascii : asciis) {
+            if (ascii.length() <= index) {
+                buckets[0].add(ascii);
+            }
+            buckets[ascii.charAt(index) - 'a' + 1].add(ascii);
+        }
+        int count = 0;
+        for (int i = 0; i < 27; i++) {
+            for (String s: buckets[i]) {
+                asciis[count] = s;
+                count++;
+            }
+        }
+        assert (count == asciis.length);
         return;
     }
 
