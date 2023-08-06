@@ -84,17 +84,23 @@ CountingSort {
             buckets[v[i] - min]++;
         }
 
-        Map<Integer, Integer> start = new TreeMap<>();
-        int pt = 0;
+//        Map<Integer, Integer> start = new TreeMap<>();
+//        int pt = 0;
+//        for (int i = 0; i < range; i++) {
+//            if (buckets[i] > 0) {
+//                start.put(i + min, pt);
+//                pt += buckets[i];
+//            }
+//        }
+//
+//        for (int i = 0; i < N; i++) {
+//            ret[start.get(v[i]) + (--buckets[v[i] - min])] = v[i];
+//        }
+        int count = 0;
         for (int i = 0; i < range; i++) {
-            if (buckets[i] > 0) {
-                start.put(i + min, pt);
-                pt += buckets[i];
+            for (int j = 0; j < buckets[i]; j++) {
+                ret[count++] = i + min;
             }
-        }
-
-        for (int i = 0; i < N; i++) {
-            ret[start.get(v[i]) + (--buckets[v[i] - min])] = v[i];
         }
 
         return ret;

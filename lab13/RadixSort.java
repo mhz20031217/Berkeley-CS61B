@@ -44,6 +44,7 @@ public class RadixSort {
         for (String ascii : asciis) {
             if (ascii.length() <= index) {
                 buckets[0].add(ascii);
+                continue;
             }
             buckets[ascii.charAt(index) - 'a' + 1].add(ascii);
         }
