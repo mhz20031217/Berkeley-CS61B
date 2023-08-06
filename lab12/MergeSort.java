@@ -1,4 +1,7 @@
 import edu.princeton.cs.algs4.Queue;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class MergeSort {
     /**
@@ -62,5 +65,49 @@ public class MergeSort {
             Queue<Item> items) {
         // Your code here!
         return items;
+    }
+
+    @Test
+    public void testMergeSort1() {
+        Integer[] orin = {9, 1, 3, 5, 6, 8, 7, 4, 2};
+        Integer[] ans = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Queue<Integer> queue = new Queue<>();
+        for (Integer i : orin) {
+            queue.enqueue(i);
+        }
+        Queue<Integer> sorted = mergeSort(queue);
+        for (int i = 0; i < 9; i++) {
+            orin[i] = sorted.dequeue();
+        }
+        boolean flag = true;
+        for (int i = 0; i < 9; i++) {
+            if (!orin[i].equals(ans[i])) {
+                flag = false;
+                break;
+            }
+        }
+        assertTrue(flag);
+    }
+
+    @Test
+    public void testMergeSort2() {
+        Integer[] orin = {4, 6, 1, 4, 7, 9, 1, 6, 0, 1};
+        Integer[] ans = {0, 1, 1, 1, 4, 4, 6, 6, 7, 9};
+        Queue<Integer> queue = new Queue<>();
+        for (Integer i : orin) {
+            queue.enqueue(i);
+        }
+        Queue<Integer> sorted = mergeSort(queue);
+        for (int i = 0; i < 10; i++) {
+            orin[i] = sorted.dequeue();
+        }
+        boolean flag = true;
+        for (int i = 0; i < 10; i++) {
+            if (!orin[i].equals(ans[i])) {
+                flag = false;
+                break;
+            }
+        }
+        assertTrue(flag);
     }
 }
