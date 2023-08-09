@@ -1,6 +1,5 @@
-import java.awt.*;
-import java.io.PipedReader;
-import java.util.Map;
+import java.awt.Color;
+
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
@@ -8,13 +7,13 @@ public class SeamCarver {
     private int width, height;
 
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture(picture);
         this.width = picture.width();
         this.height = picture.height();
     }
 
     public Picture picture() {
-        return picture;
+        return new Picture(picture);
     }
 
     public int width() {
@@ -48,6 +47,12 @@ public class SeamCarver {
     }
 
     public int[] findVerticalSeam() {
+        if (width < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (width == 1) {
+            return new int[height];
+        }
         double[][] energyMap = new double[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -55,8 +60,8 @@ public class SeamCarver {
             }
         }
 
-        double dp[][] = new double[width][height];
-        int prev[][] = new int[width][height];
+        double[][] dp = new double[width][height];
+        int[][] prev = new int[width][height];
         for (int i = 0; i < width; i++) {
             dp[i][0] = energyMap[i][0];
             prev[i][0] = 0;
@@ -111,7 +116,7 @@ public class SeamCarver {
     }
 
     public void removeHorizontalSeam(int[] seam) {
-        if (height <= 1 || seam.length != width) {
+        if (height < 1 || seam.length != width) {
             throw new IndexOutOfBoundsException();
         }
         int[] hSeam = findHorizontalSeam();
@@ -143,7 +148,7 @@ public class SeamCarver {
     }
 
     public void removeVerticalSeam(int[] seam) {
-        if (width <= 1 || seam.length != height) {
+        if (width < 1 || seam.length != height) {
             throw new IndexOutOfBoundsException();
         }
         Picture invPicture = invPicture();
