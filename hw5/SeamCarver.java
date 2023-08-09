@@ -124,7 +124,7 @@ public class SeamCarver {
                     delta = -1;
                     continue;
                 } else {
-                    nPicture.setRGB(i, j + delta, picture.getRGB(i, j));
+                    nPicture.set(i, j + delta, picture.get(i, j));
                 }
             }
         }
@@ -136,7 +136,7 @@ public class SeamCarver {
         Picture invPicture = new Picture(height, width);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                invPicture.setRGB(j, i, picture.getRGB(i, j));
+                invPicture.set(j, i, picture.get(i, j));
             }
         }
         return invPicture;
